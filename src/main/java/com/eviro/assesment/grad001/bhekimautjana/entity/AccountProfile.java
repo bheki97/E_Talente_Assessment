@@ -5,6 +5,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
+import java.net.URI;
 import java.util.Objects;
 
 @Entity
@@ -15,12 +16,12 @@ public class AccountProfile {
     private Integer id;
     private String holderName;
     private String holderSurname;
-    private String httpImageLink;
+    private URI httpImageLink;
 
     public AccountProfile() {
     }
 
-    public AccountProfile(String holderName, String holderSurname, String httpImageLink) {
+    public AccountProfile(String holderName, String holderSurname, URI httpImageLink) {
         this.holderName = holderName;
         this.holderSurname = holderSurname;
         this.httpImageLink = httpImageLink;
@@ -50,11 +51,11 @@ public class AccountProfile {
         this.holderSurname = holderSurname;
     }
 
-    public String getHttpImageLink() {
+    public URI getHttpImageLink() {
         return httpImageLink;
     }
 
-    public void setHttpImageLink(String httpImageLink) {
+    public void setHttpImageLink(URI httpImageLink) {
         this.httpImageLink = httpImageLink;
     }
 

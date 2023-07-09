@@ -1,7 +1,5 @@
 package com.eviro.assesment.grad001.bhekimautjana.controller;
 
-import com.eviro.assesment.grad001.bhekimautjana.entity.AccountProfile;
-import com.eviro.assesment.grad001.bhekimautjana.file_parser.FileParser;
 import com.eviro.assesment.grad001.bhekimautjana.service.AccountProfileServ;
 import com.eviro.assesment.grad001.bhekimautjana.service.FileParseImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +12,10 @@ import org.springframework.web.bind.annotation.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
+import java.nio.file.Paths;
 
 @RestController
+@RequestMapping("/v1/api/image")
 public class ImageController {
 
     @Autowired
@@ -27,24 +27,16 @@ public class ImageController {
     @Autowired
     private AccountProfileServ service;
 
-    @PostMapping("/image")
-    public URI getUri(@RequestParam("name") String name, @RequestParam("surname") String surname,
-                      @RequestParam("format") String format, @RequestParam("data") String data){
-        AccountProfile account = new AccountProfile();
-        account.setHolderName(name);
-        account.setHolderSurname(surname);
-        URI uri = impl.createImageLink(impl.convertCSVDataToImage(data,format));
-        account.setHttpImageLink(uri.toString());
-        service.addNewAccountProfile(account);
+    @GetMapping("/{name}/{surname}")
+    public URI getUri(@PathVariable("name") String name, @PathVariable("surname") String surname){
 
-
-        return uri;
+        return service.getAccountProfileHttpImageLink(name,surname);
     }
-    @GetMapping("/image/{name}")
-    public ResponseEntity<FileSystemResource> getImage(@PathVariable String name) throws IOException {
+    @GetMapping("/{file}")
+    public ResponseEntity<FileSystemResource> getImage(@PathVariable String file) throws IOException {
 
-        FileSystemResource imageResource = new FileSystemResource(
-                resLoader.getResource("classpath:static/pictures/"+name).getFile());
+        File fle  = Paths.get("src","main","resources","static","pictures",file).toFile();
+        FileSystemResource imageResource = new FileSystemResource(fle);
 
         if (imageResource.exists()) {
             String filename = imageResource.getFilename();
